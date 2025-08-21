@@ -1,0 +1,448 @@
+# PROMPT DECLARATION - AriaForge Claude Code Collaboration
+
+## 🎯 Mission Statement
+
+This document establishes the definitive prompt engineering framework for Claude Code collaboration on AriaForge. Every interaction with Claude Code must follow these specifications to ensure consistent, high-quality, and maintainable code generation.
+
+## 📋 Core Principles
+
+### 1. Structured Output Requirements
+- **ALWAYS** use Pydantic schemas for Python backend responses
+- **ALWAYS** use TypeScript interfaces for frontend components
+- **ALWAYS** include comprehensive error handling
+- **ALWAYS** follow established naming conventions
+- **ALWAYS** include proper documentation and comments
+
+### 2. Code Quality Standards
+- **Production-ready**: All code must be deployable without modification
+- **Type-safe**: Full TypeScript/Python type annotations required
+- **Testable**: Include unit test structures where appropriate
+- **Accessible**: WCAG 2.1 AA compliance for frontend components
+- **Performance**: Optimized for real-time music processing
+
+### 3. Architecture Compliance
+- **Frontend**: Next.js 14 App Router, React 18, Tailwind CSS, shadcn/ui
+- **Backend**: FastAPI, SQLAlchemy 2.0 async, Pydantic v2, PostgreSQL
+- **AI Integration**: LangChain, LangGraph, OpenAI/Claude APIs
+- **Audio Processing**: FFmpeg, librosa, essentia, WebAudio API
+- **Real-time**: WebSocket, Socket.io, Redis for caching
+
+## 🎵 Music-Specific Requirements
+
+### Audio Processing Standards
+```python
+# REQUIRED: Audio processing must include
+- Sample rate: 44.1kHz minimum
+- Bit depth: 24-bit for production
+- Format support: WAV, MP3, FLAC, AIFF
+- Loudness normalization: EBU R128/LUFS
+- True-peak limiting: -1.0 dBFS
+```
+
+### MIDI Data Structure
+```typescript
+// REQUIRED: MIDI note structure
+interface MIDINote {
+  pitch: number;        // 0-127 MIDI pitch
+  velocity: number;     // 0-127 velocity
+  startTime: number;    // Start time in seconds
+  duration: number;     // Duration in seconds
+  channel: number;      // MIDI channel (0-15)
+  trackId: string;      // Associated track ID
+}
+```
+
+### Music Theory Constraints
+```python
+# REQUIRED: Theory validation
+- Scale validation for all generated notes
+- Chord progression logic (functional harmony)
+- Time signature compliance
+- Tempo range: 40-200 BPM
+- Key signature validation
+```
+
+## 🤖 AI Integration Specifications
+
+### LangGraph Workflow Structure
+```python
+# REQUIRED: LangGraph node structure
+class CompositionNode:
+    def __init__(self):
+        self.input_schema = CompositionRequest
+        self.output_schema = CompositionResponse
+        self.error_handling = True
+        self.validation = True
+        self.logging = True
+```
+
+### Claude Prompt Engineering
+```python
+# REQUIRED: Claude prompt structure
+SYSTEM_PROMPT = """
+You are an expert music composition AI specializing in:
+- Music theory and harmonic analysis
+- Melody and chord progression generation
+- Arrangement and structure optimization
+- Style-specific composition techniques
+
+ALWAYS output structured JSON with Pydantic validation.
+ALWAYS include theory analysis and confidence scores.
+ALWAYS validate against musical constraints.
+"""
+```
+
+### Structured Output Schemas
+```python
+# REQUIRED: AI response schemas
+class CompositionResponse(BaseModel):
+    melody_notes: List[MIDINote]
+    chord_progression: List[Chord]
+    arrangement: ArrangementStructure
+    confidence_score: float = Field(..., ge=0.0, le=1.0)
+    theory_analysis: TheoryAnalysis
+    style_metadata: StyleMetadata
+    processing_time: float
+    model_version: str
+```
+
+## 🎨 Frontend Component Standards
+
+### Component Structure
+```typescript
+// REQUIRED: React component structure
+interface ComponentProps {
+  // Props interface with full typing
+}
+
+const Component: React.FC<ComponentProps> = ({ ...props }) => {
+  // State management
+  // Event handlers
+  // Render logic
+  // Error boundaries
+  // Accessibility attributes
+  return (
+    <div role="region" aria-label="Component description">
+      {/* Component content */}
+    </div>
+  );
+};
+```
+
+### Music UI Components
+```typescript
+// REQUIRED: Music-specific component patterns
+interface PianoRollProps {
+  notes: MIDINote[];
+  resolution: number;
+  onNoteClick: (note: MIDINote) => void;
+  onNoteDrag: (note: MIDINote, position: Position) => void;
+  onNoteDelete: (noteId: string) => void;
+  gridSnap: boolean;
+  quantization: number;
+}
+```
+
+### Real-time Collaboration
+```typescript
+// REQUIRED: WebSocket event handling
+interface CollaborationEvent {
+  type: 'note_added' | 'note_modified' | 'note_deleted' | 'cursor_moved';
+  userId: string;
+  timestamp: number;
+  data: any;
+  sessionId: string;
+}
+```
+
+## 🔧 Backend Service Standards
+
+### Service Pattern
+```python
+# REQUIRED: Service base class
+class BaseService(ABC):
+    def __init__(self):
+        self.logger = structlog.get_logger(self.__class__.__name__)
+        self.metrics = MetricsCollector()
+    
+    @abstractmethod
+    async def process(self, data: Dict[str, Any]) -> Dict[str, Any]:
+        pass
+    
+    async def validate_input(self, data: Dict[str, Any]) -> bool:
+        # Input validation logic
+        pass
+    
+    async def handle_error(self, error: Exception) -> Dict[str, Any]:
+        # Error handling logic
+        pass
+```
+
+### Database Operations
+```python
+# REQUIRED: Database operation patterns
+class DatabaseService:
+    def __init__(self, session: AsyncSession):
+        self.session = session
+    
+    async def create(self, model: BaseModel) -> BaseModel:
+        # Create with proper error handling
+        pass
+    
+    async def update(self, model_id: str, data: Dict) -> BaseModel:
+        # Update with validation
+        pass
+    
+    async def delete(self, model_id: str) -> bool:
+        # Soft delete implementation
+        pass
+```
+
+### API Endpoint Structure
+```python
+# REQUIRED: FastAPI endpoint pattern
+@router.post("/compose")
+async def create_composition(
+    request: CompositionRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+) -> CompositionResponse:
+    try:
+        # Input validation
+        # Business logic
+        # Database operations
+        # Response formatting
+        return response
+    except Exception as e:
+        # Error handling
+        raise HTTPException(status_code=500, detail=str(e))
+```
+
+## 🔐 Security & Compliance
+
+### Authentication Requirements
+```python
+# REQUIRED: JWT authentication
+class AuthService:
+    def create_access_token(self, user_id: str) -> str:
+        # JWT token creation with proper expiration
+        pass
+    
+    def verify_token(self, token: str) -> User:
+        # Token verification with error handling
+        pass
+```
+
+### Content Safety
+```python
+# REQUIRED: Similarity detection
+class SimilarityService:
+    async def check_similarity(self, composition: Composition) -> SimilarityReport:
+        # Audio fingerprinting
+        # Melodic similarity analysis
+        # Harmonic pattern matching
+        # Style comparison
+        pass
+```
+
+### Rights Management
+```python
+# REQUIRED: Rights validation
+class RightsService:
+    async def validate_usage_rights(self, content: Content) -> RightsReport:
+        # License verification
+        # Copyright checking
+        # Usage rights validation
+        pass
+```
+
+## 📊 Performance Standards
+
+### Response Time Requirements
+- **API Endpoints**: < 200ms for simple operations
+- **AI Composition**: < 30 seconds for full composition
+- **Audio Rendering**: < 60 seconds for 3-minute track
+- **Real-time Updates**: < 100ms for WebSocket events
+
+### Resource Usage Limits
+- **Memory**: < 2GB per composition session
+- **CPU**: < 80% utilization during peak load
+- **Storage**: < 100MB per project
+- **Network**: < 10MB/s per user session
+
+## 🧪 Testing Requirements
+
+### Unit Test Structure
+```python
+# REQUIRED: Test patterns
+class TestCompositionService:
+    @pytest.fixture
+    async def service(self):
+        # Service setup
+        pass
+    
+    async def test_composition_generation(self, service):
+        # Test composition logic
+        pass
+    
+    async def test_error_handling(self, service):
+        # Test error scenarios
+        pass
+```
+
+### Integration Test Requirements
+```python
+# REQUIRED: Integration test patterns
+class TestCompositionWorkflow:
+    async def test_end_to_end_composition(self):
+        # Full workflow testing
+        pass
+    
+    async def test_collaboration_workflow(self):
+        # Multi-user testing
+        pass
+```
+
+## 📝 Documentation Standards
+
+### Code Documentation
+```python
+# REQUIRED: Docstring format
+def generate_melody(
+    key: str,
+    tempo: int,
+    duration: int,
+    style: str
+) -> List[MIDINote]:
+    """
+    Generate a melody based on musical parameters.
+    
+    Args:
+        key: Musical key (e.g., 'C', 'F#m')
+        tempo: Tempo in BPM (40-200)
+        duration: Duration in seconds (1-600)
+        style: Musical style (e.g., 'pop', 'jazz')
+    
+    Returns:
+        List of MIDI notes representing the melody
+        
+    Raises:
+        ValueError: If parameters are invalid
+        CompositionError: If generation fails
+    """
+    pass
+```
+
+### API Documentation
+```python
+# REQUIRED: FastAPI documentation
+@router.post(
+    "/compose",
+    response_model=CompositionResponse,
+    summary="Generate AI composition",
+    description="Create a new musical composition using AI"
+)
+async def create_composition(request: CompositionRequest):
+    pass
+```
+
+## 🚀 Deployment Requirements
+
+### Environment Configuration
+```python
+# REQUIRED: Environment setup
+class Settings(BaseSettings):
+    # Database configuration
+    DATABASE_URL: str
+    
+    # AI service configuration
+    OPENAI_API_KEY: str
+    ANTHROPIC_API_KEY: str
+    
+    # Audio processing configuration
+    FFMPEG_PATH: str
+    
+    # Security configuration
+    SECRET_KEY: str
+    
+    class Config:
+        env_file = ".env"
+```
+
+### Health Check Requirements
+```python
+# REQUIRED: Health check endpoints
+@router.get("/health")
+async def health_check():
+    return {
+        "status": "healthy",
+        "services": {
+            "database": "connected",
+            "ai_service": "available",
+            "audio_processing": "ready"
+        },
+        "timestamp": datetime.utcnow()
+    }
+```
+
+## 📋 Claude Code Prompt Template
+
+### Standard Prompt Structure
+```
+You are an expert Fullstack Software Developer specializing in AI-driven music composition tools.
+
+TECHNICAL CONTEXT:
+- Frontend: Next.js 14, React 18, TypeScript, Tailwind CSS
+- Backend: FastAPI, SQLAlchemy 2.0, Pydantic v2, PostgreSQL
+- AI: LangChain, LangGraph, OpenAI/Claude APIs
+- Audio: FFmpeg, librosa, essentia, WebAudio API
+- Real-time: WebSocket, Socket.io, Redis
+
+REQUIREMENTS:
+[Specific requirements for this task]
+
+CONSTRAINTS:
+- Follow established naming conventions
+- Include comprehensive error handling
+- Implement proper TypeScript/Python typing
+- Add accessibility features for frontend components
+- Include unit test structures
+- Follow music theory constraints
+- Implement security best practices
+
+OUTPUT FORMAT:
+[Specify exact output format required]
+
+VALIDATION:
+- Code must be production-ready
+- Include proper documentation
+- Follow performance standards
+- Implement proper logging
+- Include error boundaries
+```
+
+## 🎯 Success Criteria
+
+### Code Quality Metrics
+- **Type Coverage**: 100% TypeScript/Python type coverage
+- **Test Coverage**: >80% unit test coverage
+- **Documentation**: 100% API and function documentation
+- **Performance**: Meet response time requirements
+- **Security**: Pass security audit requirements
+
+### Music-Specific Validation
+- **Theory Compliance**: All generated music follows theory rules
+- **Audio Quality**: Meets professional audio standards
+- **Real-time Performance**: Sub-100ms latency for collaboration
+- **Scalability**: Supports 1000+ concurrent users
+
+### User Experience Standards
+- **Accessibility**: WCAG 2.1 AA compliance
+- **Responsiveness**: Works on all device sizes
+- **Intuitiveness**: Music-first interface design
+- **Reliability**: 99.9% uptime requirement
+
+---
+
+**This document serves as the definitive guide for all Claude Code interactions on AriaForge. Strict adherence to these specifications ensures consistent, high-quality, and maintainable code generation.**
+
